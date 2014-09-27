@@ -19,7 +19,7 @@ func (s *FreeDNSService) UpdateIP() error {
 		return err
 	}
 
-	if string(content)[0:4] == "ERROR" {
+	if string(content)[0:5] == "ERROR" {
 		return errors.New(string(content))
 	}
 

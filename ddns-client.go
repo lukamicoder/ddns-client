@@ -10,6 +10,7 @@ import (
 	"net"
 	"net/http"
 	"os"
+	"path/filepath"
 	"strings"
 	"time"
 )
@@ -48,7 +49,7 @@ func main() {
 
 	var s, err = service.NewService(name, displayName, desc)
 	if err != nil {
-		fmt.Printf("Unable to start: %s", err)
+		fmt.Printf("Unable to start: %s\n", err)
 		return
 	}
 	log = s
@@ -60,30 +61,30 @@ func main() {
 		case "install":
 			err = s.Install()
 			if err != nil {
-				fmt.Printf("Failed to install: %s", err)
+				fmt.Printf("Failed to install: %s\n", err)
 			} else {
-				fmt.Printf("Service installed.")
+				fmt.Printf("Service installed.\n")
 			}
 		case "remove":
 			err = s.Remove()
 			if err != nil {
-				fmt.Printf("Failed to remove: %s", err)
+				fmt.Printf("Failed to remove: %s\n", err)
 			} else {
-				fmt.Printf("Service removed.")
+				fmt.Printf("Service removed.\n")
 			}
 		case "start":
 			err = s.Start()
 			if err != nil {
-				fmt.Printf("Failed to start: %s", err)
+				fmt.Printf("Failed to start: %s\n", err)
 			} else {
-				fmt.Printf("Service started.")
+				fmt.Printf("Service started.\n")
 			}
 		case "stop":
 			err = s.Stop()
 			if err != nil {
-				fmt.Printf("Failed to stop: %s", err)
+				fmt.Printf("Failed to stop: %s\n", err)
 			} else {
-				fmt.Printf("Service stopped.")
+				fmt.Printf("Service stopped.\n")
 			}
 		}
 
@@ -112,14 +113,14 @@ func loadConfig() error {
 	if err != nil {
 		return err
 	}
-	config, err := goconfig.LoadConfigFile(path + "\\config.ini")
+	config, err := goconfig.LoadConfigFile(filepath.Join(path, "config.ini"))
 	if err != nil {
 		return err
 	}
 
 	sections := config.GetSectionList()
 	if len(sections) < 2 {
-		return errors.New("No services found in config file.")
+		return errors.New("No services found in config file.\n")
 	}
 
 	for _, section := range sections {

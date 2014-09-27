@@ -93,7 +93,6 @@ func main() {
 	err = s.Run(func() error {
 		err = loadConfig()
 		if err != nil {
-			log.Error("Config error: %s", err)
 			return err
 		}
 
@@ -150,13 +149,18 @@ func loadConfig() error {
 			service.Name = section
 			service.Domain, err = config.GetValue(section, "domain")
 			if err != nil {
-				logMessage(ERROR, err.Error())
+				logMessage(ERROR, "%s - %s", section, err)
 				continue
 			}
-			service.Password, err = config.GetValue(section, "password")
-
+			_, err := net.LookupHost(service.GetDomain())
 			if err != nil {
-				logMessage(ERROR, err.Error())
+				logMessage(ERROR, "%s - %s", section, err)
+				continue
+			}
+
+			service.Password, err = config.GetValue(section, "password")
+			if err != nil {
+				logMessage(ERROR, "%s - %s", section, err)
 				continue
 			}
 			services = append(services, service)
@@ -169,6 +173,12 @@ func loadConfig() error {
 				logMessage(ERROR, "%s - %s", section, err)
 				continue
 			}
+			_, err := net.LookupHost(service.GetDomain())
+			if err != nil {
+				logMessage(ERROR, "%s - %s", section, err)
+				continue
+			}
+
 			service.Account, err = config.GetValue(section, "account")
 			if err != nil {
 				logMessage(ERROR, "%s - %s", section, err)
@@ -188,6 +198,12 @@ func loadConfig() error {
 				logMessage(ERROR, "%s - %s", section, err)
 				continue
 			}
+			_, err := net.LookupHost(service.GetDomain())
+			if err != nil {
+				logMessage(ERROR, "%s - %s", section, err)
+				continue
+			}
+
 			service.Account, err = config.GetValue(section, "account")
 			if err != nil {
 				logMessage(ERROR, "%s - %s", section, err)
@@ -207,6 +223,12 @@ func loadConfig() error {
 				logMessage(ERROR, "%s - %s", section, err)
 				continue
 			}
+			_, err := net.LookupHost(service.GetDomain())
+			if err != nil {
+				logMessage(ERROR, "%s - %s", section, err)
+				continue
+			}
+
 			service.Token, err = config.GetValue(section, "token")
 			if err != nil {
 				logMessage(ERROR, "%s - %s", section, err)
@@ -221,6 +243,12 @@ func loadConfig() error {
 				logMessage(ERROR, "%s - %s", section, err)
 				continue
 			}
+			_, err := net.LookupHost(service.GetDomain())
+			if err != nil {
+				logMessage(ERROR, "%s - %s", section, err)
+				continue
+			}
+
 			service.Token, err = config.GetValue(section, "token")
 			if err != nil {
 				logMessage(ERROR, "%s - %s", section, err)

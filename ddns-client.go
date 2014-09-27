@@ -33,7 +33,6 @@ type Ddns struct {
 	Domain   string
 	Account  string
 	Password string
-	Hash     string
 	Token    string
 }
 
@@ -222,7 +221,7 @@ func loadConfig() error {
 				logMessage(ERROR, "%s - %s", section, err)
 				continue
 			}
-			service.Hash, err = config.GetValue(section, "hash")
+			service.Token, err = config.GetValue(section, "token")
 			if err != nil {
 				logMessage(ERROR, "%s - %s", section, err)
 				continue

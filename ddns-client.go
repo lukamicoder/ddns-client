@@ -1,16 +1,14 @@
 package main
 
 import (
-	"bitbucket.org/kardianos/osext"
 	"bitbucket.org/kardianos/service"
 	"errors"
 	"fmt"
-	"github.com/Unknwon/goconfig"
 	"io/ioutil"
+	"lukamicoder/ini-parser"
 	"net"
 	"net/http"
 	"os"
-	"path/filepath"
 	"strings"
 	"time"
 )
@@ -109,37 +107,36 @@ func main() {
 }
 
 func loadConfig() error {
-	path, err := osext.ExecutableFolder()
-	if err != nil {
-		return err
-	}
-	config, err := goconfig.LoadConfigFile(filepath.Join(path, "config.ini"))
+	var config iniparser.Config
+
+	err := config.LoadFile("./config.ini")
 	if err != nil {
 		return err
 	}
 
-	sections := config.GetSectionList()
+	sections := config.GetSections()
 	if len(sections) < 2 {
 		return errors.New("No services found in config file.\n")
 	}
 
 	for _, section := range sections {
 		var err error
+		var name = section.Name
 
-		if section == "settings" {
-			logLevel, _ = config.GetValue("settings", "loglevel")
+		if name == "settings" {
+			logLevel, _ = config.GetString(name, "loglevel")
 			if logLevel != INFO && logLevel != ERROR && logLevel != NOLOG {
 				logLevel = INFO
 				log.Error("Incorrect loglevel in config file: %v", logLevel)
 			}
-			interval, err = config.Int("settings", "interval")
+			interval, err = config.GetInt(name, "interval")
 			if err != nil {
 				logMessage(ERROR, err.Error())
 			}
 			continue
 		}
 
-		t, err := config.GetValue(section, "type")
+		t, err := config.GetString(name, "type")
 		if err != nil {
 			logMessage(ERROR, err.Error())
 			continue
@@ -147,112 +144,112 @@ func loadConfig() error {
 		switch strings.ToLower(t) {
 		case "namecheap":
 			service := new(NameCheapService)
-			service.Name = section
-			service.Domain, err = config.GetValue(section, "domain")
+			service.Name = name
+			service.Domain, err = config.GetString(name, "domain")
 			if err != nil {
-				logMessage(ERROR, "%s - %s", section, err)
+				logMessage(ERROR, "%s - %s", name, err)
 				continue
 			}
 			_, err := net.LookupHost(service.GetDomain())
 			if err != nil {
-				logMessage(ERROR, "%s - %s", section, err)
+				logMessage(ERROR, "%s - %s", name, err)
 				continue
 			}
 
-			service.Password, err = config.GetValue(section, "password")
+			service.Password, err = config.GetString(name, "password")
 			if err != nil {
-				logMessage(ERROR, "%s - %s", section, err)
+				logMessage(ERROR, "%s - %s", name, err)
 				continue
 			}
 			services = append(services, service)
 		case "noip":
 		case "no-ip":
 			service := new(NoIPService)
-			service.Name = section
-			service.Domain, err = config.GetValue(section, "domain")
+			service.Name = name
+			service.Domain, err = config.GetString(name, "domain")
 			if err != nil {
-				logMessage(ERROR, "%s - %s", section, err)
+				logMessage(ERROR, "%s - %s", name, err)
 				continue
 			}
 			_, err := net.LookupHost(service.GetDomain())
 			if err != nil {
-				logMessage(ERROR, "%s - %s", section, err)
+				logMessage(ERROR, "%s - %s", name, err)
 				continue
 			}
 
-			service.Account, err = config.GetValue(section, "account")
+			service.Account, err = config.GetString(name, "account")
 			if err != nil {
-				logMessage(ERROR, "%s - %s", section, err)
+				logMessage(ERROR, "%s - %s", name, err)
 				continue
 			}
-			service.Password, err = config.GetValue(section, "password")
+			service.Password, err = config.GetString(name, "password")
 			if err != nil {
-				logMessage(ERROR, "%s - %s", section, err)
+				logMessage(ERROR, "%s - %s", name, err)
 				continue
 			}
 			services = append(services, service)
 		case "changeip":
 			service := new(ChangeIPService)
-			service.Name = section
-			service.Domain, err = config.GetValue(section, "domain")
+			service.Name = name
+			service.Domain, err = config.GetString(name, "domain")
 			if err != nil {
-				logMessage(ERROR, "%s - %s", section, err)
+				logMessage(ERROR, "%s - %s", name, err)
 				continue
 			}
 			_, err := net.LookupHost(service.GetDomain())
 			if err != nil {
-				logMessage(ERROR, "%s - %s", section, err)
+				logMessage(ERROR, "%s - %s", name, err)
 				continue
 			}
 
-			service.Account, err = config.GetValue(section, "account")
+			service.Account, err = config.GetString(name, "account")
 			if err != nil {
-				logMessage(ERROR, "%s - %s", section, err)
+				logMessage(ERROR, "%s - %s", name, err)
 				continue
 			}
-			service.Password, err = config.GetValue(section, "password")
+			service.Password, err = config.GetString(name, "password")
 			if err != nil {
-				logMessage(ERROR, "%s - %s", section, err)
+				logMessage(ERROR, "%s - %s", name, err)
 				continue
 			}
 			services = append(services, service)
 		case "duckdns":
 			service := new(DuckDNSService)
-			service.Name = section
-			service.Domain, err = config.GetValue(section, "domain")
+			service.Name = name
+			service.Domain, err = config.GetString(name, "domain")
 			if err != nil {
-				logMessage(ERROR, "%s - %s", section, err)
+				logMessage(ERROR, "%s - %s", name, err)
 				continue
 			}
 			_, err := net.LookupHost(service.GetDomain())
 			if err != nil {
-				logMessage(ERROR, "%s - %s", section, err)
+				logMessage(ERROR, "%s - %s", name, err)
 				continue
 			}
 
-			service.Token, err = config.GetValue(section, "token")
+			service.Token, err = config.GetString(name, "token")
 			if err != nil {
-				logMessage(ERROR, "%s - %s", section, err)
+				logMessage(ERROR, "%s - %s", name, err)
 				continue
 			}
 			services = append(services, service)
 		case "freedns":
 			service := new(FreeDNSService)
-			service.Name = section
-			service.Domain, err = config.GetValue(section, "domain")
+			service.Name = name
+			service.Domain, err = config.GetString(name, "domain")
 			if err != nil {
-				logMessage(ERROR, "%s - %s", section, err)
+				logMessage(ERROR, "%s - %s", name, err)
 				continue
 			}
 			_, err := net.LookupHost(service.GetDomain())
 			if err != nil {
-				logMessage(ERROR, "%s - %s", section, err)
+				logMessage(ERROR, "%s - %s", name, err)
 				continue
 			}
 
-			service.Token, err = config.GetValue(section, "token")
+			service.Token, err = config.GetString(name, "token")
 			if err != nil {
-				logMessage(ERROR, "%s - %s", section, err)
+				logMessage(ERROR, "%s - %s", name, err)
 				continue
 			}
 			services = append(services, service)

@@ -19,8 +19,8 @@ var (
 	interval int = 3600
 	services []IDdns
 	log      service.Logger
-	regex    *regexp.Regexp
 
+	regex           = regexp.MustCompile("(?m)[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}")
 	logLevel string = "info"
 	exit            = make(chan struct{})
 )
@@ -367,8 +367,6 @@ func update() {
 }
 
 func getExternalIP() net.IP {
-	regex, _ := regexp.Compile("(?m)[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}")
-
 	var currentIp net.IP
 	for _, i := range rand.Perm(len(urls)) {
 		url := urls[i]

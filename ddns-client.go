@@ -6,9 +6,11 @@ import (
 	"fmt"
 	"github.com/lukamicoder/ini-parser"
 	"io/ioutil"
+	"math/rand"
 	"net"
 	"net/http"
 	"os"
+	"regexp"
 	"strings"
 	"time"
 )
@@ -17,9 +19,21 @@ var (
 	interval int = 3600
 	services []IDdns
 	log      service.Logger
+	regex    *regexp.Regexp
+
 	logLevel string = "info"
 	exit            = make(chan struct{})
 )
+
+var urls = []string{
+	"http://myipinfo.net//",
+	"http://myip.dnsomatic.com/",
+	"http://icanhazip.com/",
+	"http://checkip.dyndns.org/",
+	"http://www.dslreports.com/whois/",
+	"http://www.myipnumber.com/",
+	"http://checkmyip.com/",
+}
 
 const (
 	NOLOG = "nolog"
@@ -44,6 +58,8 @@ func main() {
 	var name = "ddns-client"
 	var displayName = "DDNS Client"
 	var desc = "Dynamic DNS Client."
+
+	rand.Seed(time.Now().UTC().UnixNano())
 
 	var s, err = service.NewService(name, displayName, desc)
 	if err != nil {
@@ -300,7 +316,7 @@ func stopTicker() {
 
 func update() {
 	currentIp := getExternalIP()
-	if currentIp == "" {
+	if currentIp == nil {
 		return
 	}
 
@@ -317,12 +333,12 @@ func update() {
 
 		registeredIp := addr[0]
 
-		if currentIp == registeredIp {
+		if currentIp.String() == registeredIp {
 			logMessage(INFO, "%s - No update is necessary", service.GetDomain())
 		} else {
 			err := service.UpdateIP()
 			if err == nil {
-				logMessage(INFO, "%s - Successfully updated from %s to %s", service.GetDomain(), registeredIp, currentIp)
+				logMessage(INFO, "%s - Successfully updated from %s to %s", service.GetDomain(), registeredIp, currentIp.String())
 			} else {
 				logMessage(ERROR, "%s - %s", service.GetDomain(), err)
 			}
@@ -330,62 +346,29 @@ func update() {
 	}
 }
 
-func getExternalIP() string {
-	url := "http://myipinfo.net//"
-	content, err := GetContent(url, "", "")
-	if err == nil {
-		html := string(content)
-		startPos := strings.Index(html, "<h2>")
-		endPos := strings.Index(html, "</h2>")
-		if startPos > 0 && endPos > startPos {
-			sip := html[startPos+4 : endPos]
-			ip := net.ParseIP(sip)
+func getExternalIP() net.IP {
+	regex, _ := regexp.Compile("(?m)[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}")
 
-			return ip.String()
-		} else {
-			logMessage(ERROR, "%s - Parsing failed", url)
+	var currentIp net.IP
+	for _, i := range rand.Perm(len(urls)) {
+		url := urls[i]
+
+		content, err := GetContent(url, "", "")
+		if err != nil {
+			logMessage(ERROR, "%s - %s", url, err)
+			continue
+		}
+
+		ip := regex.FindString(string(content))
+
+		currentIp = net.ParseIP(ip)
+
+		if currentIp != nil {
+			return currentIp
 		}
 	}
-	logMessage(ERROR, "%s - %s", url, err)
 
-	url = "http://myip.dnsomatic.com/"
-	content, err = GetContent(url, "", "")
-	if err == nil {
-		html := string(content)
-		ip := net.ParseIP(strings.TrimSpace(html))
-
-		return ip.String()
-	}
-	logMessage(ERROR, "%s - %s", url, err)
-
-	url = "http://icanhazip.com/"
-	content, err = GetContent(url, "", "")
-	if err == nil {
-		html := string(content)
-		ip := net.ParseIP(strings.TrimSpace(html))
-
-		return ip.String()
-	}
-	logMessage(ERROR, "%s - %s", url, err)
-
-	url = "http://checkip.dyndns.org/"
-	content, err = GetContent(url, "", "")
-	if err == nil {
-		html := string(content)
-		startPos := strings.Index(html, ": ")
-		endPos := strings.Index(html, "</body>")
-		if startPos > 0 && endPos > startPos {
-			sip := html[startPos+2 : endPos]
-			ip := net.ParseIP(sip)
-
-			return ip.String()
-		} else {
-			logMessage(ERROR, "%s - Parsing failed", url)
-		}
-	}
-	logMessage(ERROR, "%s - %s", url, err)
-
-	return ""
+	return currentIp
 }
 
 func GetContent(url string, login string, password string) ([]byte, error) {

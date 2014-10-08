@@ -269,6 +269,26 @@ func loadConfig() error {
 				continue
 			}
 			services = append(services, service)
+		case "system-ns":
+		case "systemns":
+			service := new(SystemNSService)
+			service.Name = name
+			service.Domain, err = config.GetString(name, "domain")
+			if err != nil {
+				logMessage(ERROR, "%s - %s", name, err)
+				continue
+			}
+			_, err := net.LookupHost(service.GetDomain())
+			if err != nil {
+				logMessage(ERROR, "%s - %s", name, err)
+				continue
+			}
+			service.Token, err = config.GetString(name, "token")
+			if err != nil {
+				logMessage(ERROR, "%s - %s", name, err)
+				continue
+			}
+			services = append(services, service)
 		}
 	}
 

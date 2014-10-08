@@ -25,15 +25,15 @@ func (s *NameCheapService) UpdateIP() error {
 	host := s.Domain[0:pos]
 	domain := s.Domain[pos+1 : len(s.Domain)]
 
-	url := []string{"https://dynamicdns.park-your-domain.com/update?domain=", domain, "&host=", host, "&password=", s.Password}
+	url := "https://dynamicdns.park-your-domain.com/update?domain=" + domain + "&host=" + host + "&password=" + s.Password
 
-	content, err := GetContent(strings.Join(url, ""), "", "")
+	content, err := GetContent(url, "", "")
 	if err != nil {
 		return err
 	}
 
 	var dict dictionary
-	err = xml.Unmarshal(content, &dict)
+	err = xml.Unmarshal([]byte(content), &dict)
 	if err != nil {
 		return err
 	}

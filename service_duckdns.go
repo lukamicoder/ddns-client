@@ -18,14 +18,14 @@ func (s *DuckDNSService) UpdateIP() error {
 	}
 
 	host := s.Domain[0:pos]
-	url := []string{"https://www.duckdns.org/update?domains=", host, "&token=", s.Token}
+	url := "https://www.duckdns.org/update?domains=" + host + "&token=" + s.Token
 
-	content, err := GetContent(strings.Join(url, ""), "", "")
+	content, err := GetContent(url, "", "")
 	if err != nil {
 		return err
 	}
 
-	if string(content) == "KO" {
+	if content == "KO" {
 		return errors.New("Update failed.")
 	}
 

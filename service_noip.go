@@ -17,9 +17,8 @@ func (s *NoIPService) UpdateIP() error {
 		return err
 	}
 
-	body := string(content)
-	if !strings.HasPrefix(body, "nochg") && !strings.HasPrefix(body, "good") {
-		return errors.New(body)
+	if !strings.HasPrefix(content, "nochg") && !strings.HasPrefix(content, "good") {
+		return errors.New(content)
 	}
 
 	return nil

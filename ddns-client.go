@@ -359,7 +359,7 @@ func getExternalIP() net.IP {
 			continue
 		}
 
-		ip := regex.FindString(string(content))
+		ip := regex.FindString(content)
 
 		currentIp = net.ParseIP(ip)
 
@@ -371,10 +371,10 @@ func getExternalIP() net.IP {
 	return currentIp
 }
 
-func GetContent(url string, login string, password string) ([]byte, error) {
+func GetContent(url string, login string, password string) (string, error) {
 	request, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		return nil, err
+		return "", err
 	}
 
 	if login != "" && password != "" {
@@ -384,14 +384,14 @@ func GetContent(url string, login string, password string) ([]byte, error) {
 	client := &http.Client{}
 	response, err := client.Do(request)
 	if err != nil {
-		return nil, err
+		return "", err
 	}
 
 	defer response.Body.Close()
 	content, err := ioutil.ReadAll(response.Body)
 	if err != nil {
-		return nil, err
+		return "", err
 	}
 
-	return content, nil
+	return string(content), nil
 }

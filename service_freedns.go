@@ -2,7 +2,6 @@ package main
 
 import (
 	"errors"
-	"strings"
 )
 
 type FreeDNSService Ddns
@@ -12,15 +11,15 @@ func (s *FreeDNSService) GetDomain() string {
 }
 
 func (s *FreeDNSService) UpdateIP() error {
-	url := []string{"http://freedns.afraid.org/dynamic/update.php?", s.Token}
+	url := "http://freedns.afraid.org/dynamic/update.php?" + s.Token
 
-	content, err := GetContent(strings.Join(url, ""), "", "")
+	content, err := GetContent(url, "", "")
 	if err != nil {
 		return err
 	}
 
-	if string(content)[0:5] == "ERROR" {
-		return errors.New(string(content))
+	if content[0:5] == "ERROR" {
+		return errors.New(content)
 	}
 
 	return nil

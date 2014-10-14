@@ -27,7 +27,7 @@ func (s *SystemNSService) UpdateIP() error {
 
 	code, err := strconv.Atoi(content[pos+1 : pos+2])
 	if err != nil {
-		return errors.New(content)
+		return err
 	}
 
 	switch code {

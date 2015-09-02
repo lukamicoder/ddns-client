@@ -8,6 +8,7 @@ A simple dynamic dns client in Go. The following services are supported:
  - DuckDNS		https://duckdns.org/
  - FreeDNS		http://freedns.afraid.org/
  - System-NS	http://system-ns.com/
+ - IpDns	http://www.ipdns.hu/
 
 Usage
 

@@ -289,6 +289,25 @@ func loadConfig() error {
 				continue
 			}
 			services = append(services, service)
+		case "ipdns":
+			service := new(IPDNSService)
+			service.Name = name
+			service.Domain, err = config.GetString(name, "domain")
+			if err != nil {
+				logMessage(ERROR, "%s - %s", name, err)
+				continue
+			}
+			_, err := net.LookupHost(service.GetDomain())
+			if err != nil {
+				logMessage(ERROR, "%s - %s", name, err)
+				continue
+			}
+			service.Password, err = config.GetString(name, "password")
+			if err != nil {
+				logMessage(ERROR, "%s - %s", name, err)
+				continue
+			}
+			services = append(services, service)
 		}
 	}
 

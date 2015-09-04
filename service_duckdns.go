@@ -20,7 +20,7 @@ func (s *DuckDNSService) UpdateIP() error {
 	host := s.Domain[0:pos]
 	url := "https://www.duckdns.org/update?domains=" + host + "&token=" + s.Token
 
-	content, err := GetContent(url, "", "")
+	content, err := GetResponse(url, "", "")
 	if err != nil {
 		return err
 	}

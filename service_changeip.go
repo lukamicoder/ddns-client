@@ -13,7 +13,7 @@ func (s *ChangeIPService) GetDomain() string {
 func (s *ChangeIPService) UpdateIP() error {
 	url := "https://nic.changeip.com/nic/update?u=" + s.Account + "&p=" + s.Password + "&cmd=update&hostname=" + s.Domain
 
-	content, err := GetContent(url, "", "")
+	content, err := GetResponse(url, "", "")
 	if err != nil {
 		return err
 	}

@@ -27,7 +27,7 @@ func (s *NameCheapService) UpdateIP() error {
 
 	url := "https://dynamicdns.park-your-domain.com/update?domain=" + domain + "&host=" + host + "&password=" + s.Password
 
-	content, err := GetContent(url, "", "")
+	content, err := GetResponse(url, "", "")
 	if err != nil {
 		return err
 	}

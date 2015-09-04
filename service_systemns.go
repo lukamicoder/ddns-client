@@ -15,7 +15,7 @@ func (s *SystemNSService) GetDomain() string {
 func (s *SystemNSService) UpdateIP() error {
 	url := "http://system-ns.com/api?type=dynamic&domain=" + s.Domain + "&command=set&token=" + s.Token
 
-	content, err := GetContent(url, "", "")
+	content, err := GetResponse(url, "", "")
 	if err != nil {
 		return err
 	}

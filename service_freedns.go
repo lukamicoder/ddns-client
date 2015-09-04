@@ -13,7 +13,7 @@ func (s *FreeDNSService) GetDomain() string {
 func (s *FreeDNSService) UpdateIP() error {
 	url := "http://freedns.afraid.org/dynamic/update.php?" + s.Token
 
-	content, err := GetContent(url, "", "")
+	content, err := GetResponse(url, "", "")
 	if err != nil {
 		return err
 	}

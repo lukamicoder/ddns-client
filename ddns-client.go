@@ -18,26 +18,33 @@ import (
 var (
 	interval int = 3600
 	services []IDdns
-	log      service.Logger
+	log service.Logger
 
-	regex           = regexp.MustCompile("(?m)[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}")
+	regex = regexp.MustCompile("(?m)[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}")
 	logLevel string = "info"
-	exit            = make(chan struct{})
+	exit = make(chan struct {})
 )
 
 var urls = []string{
-	"http://myipinfo.net//",
-	"http://myip.dnsomatic.com/",
-	"http://icanhazip.com/",
-	"http://checkip.dyndns.org/",
-	"http://www.dslreports.com/whois/",
-	"http://www.myipnumber.com/",
-	"http://checkmyip.com/",
+	"myipinfo.net",
+	"myip.dnsomatic.com",
+	"icanhazip.com",
+	"checkip.dyndns.org",
+	"www.myipnumber.com",
+	"checkmyip.com",
+	"myexternalip.com",
+	"www.ipchicken.com",
+	"ipecho.net/plain",
+	"bot.whatismyipaddress.com",
+	"ipv4.ipogre.com",
+	"smart-ip.net/myip",
+	"checkip.amazonaws.com",
+	"www.checkip.org",
 }
 
 const (
 	NOLOG = "nolog"
-	INFO  = "info"
+	INFO = "info"
 	ERROR = "error"
 )
 
@@ -350,7 +357,7 @@ func runTicker() {
 
 func stopTicker() {
 	logMessage(INFO, "Stopping service...")
-	exit <- struct{}{}
+	exit <- struct {}{}
 }
 
 func update() {
@@ -386,11 +393,11 @@ func update() {
 }
 
 func getExternalIP() net.IP {
-	var currentIp net.IP
+	var currentIP net.IP
 	for _, i := range rand.Perm(len(urls)) {
 		url := urls[i]
 
-		content, err := GetContent(url, "", "")
+		content, err := GetResponse(url, "", "")
 		if err != nil {
 			logMessage(ERROR, "%s - %s", url, err)
 			continue
@@ -398,17 +405,17 @@ func getExternalIP() net.IP {
 
 		ip := regex.FindString(content)
 
-		currentIp = net.ParseIP(ip)
+		currentIP = net.ParseIP(ip)
 
-		if currentIp != nil {
-			return currentIp
+		if currentIP != nil {
+			return currentIP
 		}
 	}
 
-	return currentIp
+	return currentIP
 }
 
-func GetContent(url string, login string, password string) (string, error) {
+func GetResponse(url string, login string, password string) (string, error) {
 	request, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return "", err

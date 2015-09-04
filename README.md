@@ -5,10 +5,10 @@ A simple dynamic dns client in Go. The following services are supported:
  - Namecheap:	https://www.namecheap.com/
  - ChangeIP:	https://www.changeip.com/
  - No-IP:		http://www.noip.com/
- - DuckDNS		https://duckdns.org/
- - FreeDNS		http://freedns.afraid.org/
- - System-NS	http://system-ns.com/
- - IpDns	http://www.ipdns.hu/
+ - DuckDNS:		https://duckdns.org/
+ - FreeDNS:		http://freedns.afraid.org/
+ - System-NS:	http://system-ns.com/
+ - IpDns:	http://www.ipdns.hu/
 
 Usage
 

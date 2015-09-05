@@ -12,11 +12,11 @@ type dictionary struct {
 	ErrCount int `xml:"ErrCount"`
 }
 
-func (s *NameCheapService) GetDomain() string {
+func (s *NameCheapService) getDomain() string {
 	return s.Domain
 }
 
-func (s *NameCheapService) UpdateIP() error {
+func (s *NameCheapService) updateIP() error {
 	pos := strings.Index(s.Domain, ".")
 	if pos < 1 {
 		return errors.New("Incorrect domain.")

@@ -7,11 +7,11 @@ import (
 
 type DuckDNSService Ddns
 
-func (s *DuckDNSService) GetDomain() string {
+func (s *DuckDNSService) getDomain() string {
 	return s.Domain
 }
 
-func (s *DuckDNSService) UpdateIP() error {
+func (s *DuckDNSService) updateIP() error {
 	pos := strings.Index(s.Domain, ".")
 	if pos < 1 {
 		return errors.New("Incorrect domain.")

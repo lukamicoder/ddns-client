@@ -8,11 +8,11 @@ import (
 
 type SystemNSService Ddns
 
-func (s *SystemNSService) GetDomain() string {
+func (s *SystemNSService) getDomain() string {
 	return s.Domain
 }
 
-func (s *SystemNSService) UpdateIP() error {
+func (s *SystemNSService) updateIP() error {
 	url := "http://system-ns.com/api?type=dynamic&domain=" + s.Domain + "&command=set&token=" + s.Token
 
 	content, err := GetResponse(url, "", "")

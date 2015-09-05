@@ -16,12 +16,12 @@ import (
 )
 
 var (
-	interval int = 3600
+	interval = 3600
 	services []IDdns
 	log service.Logger
 
 	regex = regexp.MustCompile("(?m)[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}")
-	logLevel string = "info"
+	logLevel = "info"
 	exit = make(chan struct {})
 )
 
@@ -42,12 +42,7 @@ var urls = []string{
 	"www.checkip.org",
 }
 
-const (
-	NOLOG = "nolog"
-	INFO = "info"
-	ERROR = "error"
-)
-
+//Represents dynamic DNS service
 type Ddns struct {
 	Name     string
 	Domain   string
@@ -56,9 +51,10 @@ type Ddns struct {
 	Token    string
 }
 
+//Represents an interface for a dynamic DNS service
 type IDdns interface {
-	UpdateIP() error
-	GetDomain() string
+	updateIP() error
+	getDomain() string
 }
 
 func main() {
@@ -148,20 +144,20 @@ func loadConfig() error {
 
 		if name == "settings" {
 			logLevel, _ = config.GetString(name, "loglevel")
-			if logLevel != INFO && logLevel != ERROR && logLevel != NOLOG {
-				logLevel = INFO
+			if logLevel != "info" && logLevel != "error" && logLevel != "nolog" {
+				logLevel = "info"
 				log.Error("Incorrect loglevel in config file: %v", logLevel)
 			}
 			interval, err = config.GetInt(name, "interval")
 			if err != nil {
-				logMessage(ERROR, err.Error())
+				logMessage("error", err.Error())
 			}
 			continue
 		}
 
 		t, err := config.GetString(name, "type")
 		if err != nil {
-			logMessage(ERROR, err.Error())
+			logMessage("error", err.Error())
 			continue
 		}
 		switch strings.ToLower(t) {
@@ -170,18 +166,18 @@ func loadConfig() error {
 			service.Name = name
 			service.Domain, err = config.GetString(name, "domain")
 			if err != nil {
-				logMessage(ERROR, "%s - %s", name, err)
+				logMessage("error", "%s - %s", name, err)
 				continue
 			}
-			_, err := net.LookupHost(service.GetDomain())
+			_, err := net.LookupHost(service.getDomain())
 			if err != nil {
-				logMessage(ERROR, "%s - %s", name, err)
+				logMessage("error", "%s - %s", name, err)
 				continue
 			}
 
 			service.Password, err = config.GetString(name, "password")
 			if err != nil {
-				logMessage(ERROR, "%s - %s", name, err)
+				logMessage("error", "%s - %s", name, err)
 				continue
 			}
 			services = append(services, service)
@@ -191,23 +187,23 @@ func loadConfig() error {
 			service.Name = name
 			service.Domain, err = config.GetString(name, "domain")
 			if err != nil {
-				logMessage(ERROR, "%s - %s", name, err)
+				logMessage("error", "%s - %s", name, err)
 				continue
 			}
-			_, err := net.LookupHost(service.GetDomain())
+			_, err := net.LookupHost(service.getDomain())
 			if err != nil {
-				logMessage(ERROR, "%s - %s", name, err)
+				logMessage("error", "%s - %s", name, err)
 				continue
 			}
 
 			service.Account, err = config.GetString(name, "account")
 			if err != nil {
-				logMessage(ERROR, "%s - %s", name, err)
+				logMessage("error", "%s - %s", name, err)
 				continue
 			}
 			service.Password, err = config.GetString(name, "password")
 			if err != nil {
-				logMessage(ERROR, "%s - %s", name, err)
+				logMessage("error", "%s - %s", name, err)
 				continue
 			}
 			services = append(services, service)
@@ -216,23 +212,23 @@ func loadConfig() error {
 			service.Name = name
 			service.Domain, err = config.GetString(name, "domain")
 			if err != nil {
-				logMessage(ERROR, "%s - %s", name, err)
+				logMessage("error", "%s - %s", name, err)
 				continue
 			}
-			_, err := net.LookupHost(service.GetDomain())
+			_, err := net.LookupHost(service.getDomain())
 			if err != nil {
-				logMessage(ERROR, "%s - %s", name, err)
+				logMessage("error", "%s - %s", name, err)
 				continue
 			}
 
 			service.Account, err = config.GetString(name, "account")
 			if err != nil {
-				logMessage(ERROR, "%s - %s", name, err)
+				logMessage("error", "%s - %s", name, err)
 				continue
 			}
 			service.Password, err = config.GetString(name, "password")
 			if err != nil {
-				logMessage(ERROR, "%s - %s", name, err)
+				logMessage("error", "%s - %s", name, err)
 				continue
 			}
 			services = append(services, service)
@@ -241,18 +237,18 @@ func loadConfig() error {
 			service.Name = name
 			service.Domain, err = config.GetString(name, "domain")
 			if err != nil {
-				logMessage(ERROR, "%s - %s", name, err)
+				logMessage("error", "%s - %s", name, err)
 				continue
 			}
-			_, err := net.LookupHost(service.GetDomain())
+			_, err := net.LookupHost(service.getDomain())
 			if err != nil {
-				logMessage(ERROR, "%s - %s", name, err)
+				logMessage("error", "%s - %s", name, err)
 				continue
 			}
 
 			service.Token, err = config.GetString(name, "token")
 			if err != nil {
-				logMessage(ERROR, "%s - %s", name, err)
+				logMessage("error", "%s - %s", name, err)
 				continue
 			}
 			services = append(services, service)
@@ -261,18 +257,18 @@ func loadConfig() error {
 			service.Name = name
 			service.Domain, err = config.GetString(name, "domain")
 			if err != nil {
-				logMessage(ERROR, "%s - %s", name, err)
+				logMessage("error", "%s - %s", name, err)
 				continue
 			}
-			_, err := net.LookupHost(service.GetDomain())
+			_, err := net.LookupHost(service.getDomain())
 			if err != nil {
-				logMessage(ERROR, "%s - %s", name, err)
+				logMessage("error", "%s - %s", name, err)
 				continue
 			}
 
 			service.Token, err = config.GetString(name, "token")
 			if err != nil {
-				logMessage(ERROR, "%s - %s", name, err)
+				logMessage("error", "%s - %s", name, err)
 				continue
 			}
 			services = append(services, service)
@@ -282,17 +278,17 @@ func loadConfig() error {
 			service.Name = name
 			service.Domain, err = config.GetString(name, "domain")
 			if err != nil {
-				logMessage(ERROR, "%s - %s", name, err)
+				logMessage("error", "%s - %s", name, err)
 				continue
 			}
-			_, err := net.LookupHost(service.GetDomain())
+			_, err := net.LookupHost(service.getDomain())
 			if err != nil {
-				logMessage(ERROR, "%s - %s", name, err)
+				logMessage("error", "%s - %s", name, err)
 				continue
 			}
 			service.Token, err = config.GetString(name, "token")
 			if err != nil {
-				logMessage(ERROR, "%s - %s", name, err)
+				logMessage("error", "%s - %s", name, err)
 				continue
 			}
 			services = append(services, service)
@@ -301,17 +297,17 @@ func loadConfig() error {
 			service.Name = name
 			service.Domain, err = config.GetString(name, "domain")
 			if err != nil {
-				logMessage(ERROR, "%s - %s", name, err)
+				logMessage("error", "%s - %s", name, err)
 				continue
 			}
-			_, err := net.LookupHost(service.GetDomain())
+			_, err := net.LookupHost(service.getDomain())
 			if err != nil {
-				logMessage(ERROR, "%s - %s", name, err)
+				logMessage("error", "%s - %s", name, err)
 				continue
 			}
 			service.Password, err = config.GetString(name, "password")
 			if err != nil {
-				logMessage(ERROR, "%s - %s", name, err)
+				logMessage("error", "%s - %s", name, err)
 				continue
 			}
 			services = append(services, service)
@@ -326,16 +322,16 @@ func loadConfig() error {
 }
 
 func logMessage(level string, format string, a ...interface{}) {
-	if logLevel == NOLOG {
+	if logLevel == "nolog" {
 		return
 	}
 
-	if logLevel == INFO && level == INFO {
+	if logLevel == "info" && level == "info" {
 		log.Info(format, a...)
 		return
 	}
 
-	if level == ERROR {
+	if level == "error" {
 		log.Error(format, a...)
 	}
 }
@@ -356,37 +352,37 @@ func runTicker() {
 }
 
 func stopTicker() {
-	logMessage(INFO, "Stopping service...")
+	logMessage("info", "Stopping service...")
 	exit <- struct {}{}
 }
 
 func update() {
-	currentIp := getExternalIP()
-	if currentIp == nil {
+	currentIP := getExternalIP()
+	if currentIP == nil {
 		return
 	}
 
 	for _, service := range services {
-		addr, err := net.LookupHost(service.GetDomain())
+		addr, err := net.LookupHost(service.getDomain())
 		if err != nil {
-			logMessage(ERROR, "%s - %s", service.GetDomain(), err)
+			logMessage("error", "%s - %s", service.getDomain(), err)
 			continue
 		}
 		if len(addr) == 0 || addr[0] == "" {
-			logMessage(ERROR, "%s - Unable to get IP address", service.GetDomain())
+			logMessage("error", "%s - Unable to get IP address", service.getDomain())
 			continue
 		}
 
-		registeredIp := addr[0]
+		registeredIP := addr[0]
 
-		if currentIp.String() == registeredIp {
-			logMessage(INFO, "%s - No update is necessary", service.GetDomain())
+		if currentIP.String() == registeredIP {
+			logMessage("info", "%s - No update is necessary", service.getDomain())
 		} else {
-			err := service.UpdateIP()
+			err := service.updateIP()
 			if err == nil {
-				logMessage(INFO, "%s - Successfully updated from %s to %s", service.GetDomain(), registeredIp, currentIp.String())
+				logMessage("info", "%s - Successfully updated from %s to %s", service.getDomain(), registeredIP, currentIP.String())
 			} else {
-				logMessage(ERROR, "%s - %s", service.GetDomain(), err)
+				logMessage("error", "%s - %s", service.getDomain(), err)
 			}
 		}
 	}
@@ -399,7 +395,7 @@ func getExternalIP() net.IP {
 
 		content, err := GetResponse(url, "", "")
 		if err != nil {
-			logMessage(ERROR, "%s - %s", url, err)
+			logMessage("error", "%s - %s", url, err)
 			continue
 		}
 
@@ -415,6 +411,7 @@ func getExternalIP() net.IP {
 	return currentIP
 }
 
+//returns the content at the url address
 func GetResponse(url string, login string, password string) (string, error) {
 	request, err := http.NewRequest("GET", url, nil)
 	if err != nil {

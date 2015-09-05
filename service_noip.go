@@ -7,11 +7,11 @@ import (
 
 type NoIPService Ddns
 
-func (s *NoIPService) GetDomain() string {
+func (s *NoIPService) getDomain() string {
 	return s.Domain
 }
 
-func (s *NoIPService) UpdateIP() error {
+func (s *NoIPService) updateIP() error {
 	content, err := GetResponse("https://dynupdate.no-ip.com/nic/update?hostname="+s.Domain, s.Account, s.Password)
 	if err != nil {
 		return err

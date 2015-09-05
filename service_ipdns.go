@@ -5,13 +5,13 @@ import (
 	"strings"
 )
 
-type IPDNSService Ddns
+type ipDNSService Ddns
 
-func (s *IPDNSService) getDomain() string {
+func (s *ipDNSService) getDomain() string {
 	return s.Domain
 }
 
-func (s *IPDNSService) updateIP() error {
+func (s *ipDNSService) updateIP() error {
 	content, err := GetResponse("http://update.ipdns.hu/update?hostname=" + s.Domain, s.Account, s.Password)
 	if err != nil {
 		return err

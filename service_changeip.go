@@ -4,13 +4,13 @@ import (
 	"errors"
 )
 
-type ChangeIPService Ddns
+type changeIPService Ddns
 
-func (s *ChangeIPService) getDomain() string {
+func (s *changeIPService) getDomain() string {
 	return s.Domain
 }
 
-func (s *ChangeIPService) updateIP() error {
+func (s *changeIPService) updateIP() error {
 	url := "https://nic.changeip.com/nic/update?u=" + s.Account + "&p=" + s.Password + "&cmd=update&hostname=" + s.Domain
 
 	content, err := GetResponse(url, "", "")

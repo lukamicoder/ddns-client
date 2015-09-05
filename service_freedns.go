@@ -4,13 +4,13 @@ import (
 	"errors"
 )
 
-type FreeDNSService Ddns
+type freeDNSService Ddns
 
-func (s *FreeDNSService) getDomain() string {
+func (s *freeDNSService) getDomain() string {
 	return s.Domain
 }
 
-func (s *FreeDNSService) updateIP() error {
+func (s *freeDNSService) updateIP() error {
 	url := "http://freedns.afraid.org/dynamic/update.php?" + s.Token
 
 	content, err := GetResponse(url, "", "")

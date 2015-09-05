@@ -5,13 +5,13 @@ import (
 	"strings"
 )
 
-type NoIPService Ddns
+type noIPService Ddns
 
-func (s *NoIPService) getDomain() string {
+func (s *noIPService) getDomain() string {
 	return s.Domain
 }
 
-func (s *NoIPService) updateIP() error {
+func (s *noIPService) updateIP() error {
 	content, err := GetResponse("https://dynupdate.no-ip.com/nic/update?hostname="+s.Domain, s.Account, s.Password)
 	if err != nil {
 		return err

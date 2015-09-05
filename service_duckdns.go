@@ -5,13 +5,13 @@ import (
 	"strings"
 )
 
-type DuckDNSService Ddns
+type duckDNSService Ddns
 
-func (s *DuckDNSService) getDomain() string {
+func (s *duckDNSService) getDomain() string {
 	return s.Domain
 }
 
-func (s *DuckDNSService) updateIP() error {
+func (s *duckDNSService) updateIP() error {
 	pos := strings.Index(s.Domain, ".")
 	if pos < 1 {
 		return errors.New("Incorrect domain.")

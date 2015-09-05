@@ -42,7 +42,7 @@ var urls = []string{
 	"www.checkip.org",
 }
 
-//Represents dynamic DNS service
+//Represents a dynamic DNS service
 type Ddns struct {
 	Name     string
 	Domain   string
@@ -162,7 +162,7 @@ func loadConfig() error {
 		}
 		switch strings.ToLower(t) {
 		case "namecheap":
-			service := new(NameCheapService)
+			service := new(nameCheapService)
 			service.Name = name
 			service.Domain, err = config.GetString(name, "domain")
 			if err != nil {
@@ -183,7 +183,7 @@ func loadConfig() error {
 			services = append(services, service)
 		case "noip":
 		case "no-ip":
-			service := new(NoIPService)
+			service := new(noIPService)
 			service.Name = name
 			service.Domain, err = config.GetString(name, "domain")
 			if err != nil {
@@ -208,7 +208,7 @@ func loadConfig() error {
 			}
 			services = append(services, service)
 		case "changeip":
-			service := new(ChangeIPService)
+			service := new(changeIPService)
 			service.Name = name
 			service.Domain, err = config.GetString(name, "domain")
 			if err != nil {
@@ -233,7 +233,7 @@ func loadConfig() error {
 			}
 			services = append(services, service)
 		case "duckdns":
-			service := new(DuckDNSService)
+			service := new(duckDNSService)
 			service.Name = name
 			service.Domain, err = config.GetString(name, "domain")
 			if err != nil {
@@ -253,7 +253,7 @@ func loadConfig() error {
 			}
 			services = append(services, service)
 		case "freedns":
-			service := new(FreeDNSService)
+			service := new(freeDNSService)
 			service.Name = name
 			service.Domain, err = config.GetString(name, "domain")
 			if err != nil {
@@ -274,7 +274,7 @@ func loadConfig() error {
 			services = append(services, service)
 		case "system-ns":
 		case "systemns":
-			service := new(SystemNSService)
+			service := new(systemNSService)
 			service.Name = name
 			service.Domain, err = config.GetString(name, "domain")
 			if err != nil {
@@ -293,7 +293,7 @@ func loadConfig() error {
 			}
 			services = append(services, service)
 		case "ipdns":
-			service := new(IPDNSService)
+			service := new(ipDNSService)
 			service.Name = name
 			service.Domain, err = config.GetString(name, "domain")
 			if err != nil {

@@ -6,13 +6,13 @@ import (
 	"strings"
 )
 
-type SystemNSService Ddns
+type systemNSService Ddns
 
-func (s *SystemNSService) getDomain() string {
+func (s *systemNSService) getDomain() string {
 	return s.Domain
 }
 
-func (s *SystemNSService) updateIP() error {
+func (s *systemNSService) updateIP() error {
 	url := "http://system-ns.com/api?type=dynamic&domain=" + s.Domain + "&command=set&token=" + s.Token
 
 	content, err := GetResponse(url, "", "")

@@ -6,17 +6,17 @@ import (
 	"strings"
 )
 
-type NameCheapService Ddns
+type nameCheapService Ddns
 
 type dictionary struct {
 	ErrCount int `xml:"ErrCount"`
 }
 
-func (s *NameCheapService) getDomain() string {
+func (s *nameCheapService) getDomain() string {
 	return s.Domain
 }
 
-func (s *NameCheapService) updateIP() error {
+func (s *nameCheapService) updateIP() error {
 	pos := strings.Index(s.Domain, ".")
 	if pos < 1 {
 		return errors.New("Incorrect domain.")

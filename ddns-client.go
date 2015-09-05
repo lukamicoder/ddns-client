@@ -42,7 +42,7 @@ var urls = []string{
 	"www.checkip.org",
 }
 
-//Represents a dynamic DNS service
+//Ddns represents a dynamic DNS service
 type Ddns struct {
 	Name     string
 	Domain   string
@@ -51,7 +51,7 @@ type Ddns struct {
 	Token    string
 }
 
-//Represents an interface for a dynamic DNS service
+//IDdns represents an interface for a dynamic DNS service
 type IDdns interface {
 	updateIP() error
 	getDomain() string
@@ -411,7 +411,7 @@ func getExternalIP() net.IP {
 	return currentIP
 }
 
-//returns the content at the url address
+//GetResponse returns the content at the url address
 func GetResponse(url string, login string, password string) (string, error) {
 	request, err := http.NewRequest("GET", url, nil)
 	if err != nil {

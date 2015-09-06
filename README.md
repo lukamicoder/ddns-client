@@ -14,4 +14,4 @@ Usage
 
 To install as a Windows service in a Windows environment or a daemon in a Linux environment run 'ddns-client install'. 
 
-To remove the service run 'ddns-client remove'.
+To remove the service run 'ddns-client uninstall'.

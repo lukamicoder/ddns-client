@@ -17,7 +17,7 @@ import (
 
 var (
 	interval = 3600
-	services []IDdns
+	services []DdnsService
 	logger service.Logger
 
 	regex = regexp.MustCompile("(?m)[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}")
@@ -49,8 +49,8 @@ type Ddns struct {
 	Token    string
 }
 
-//IDdns represents an interface for a dynamic DNS service
-type IDdns interface {
+//DdnsService represents an interface for a dynamic DNS service
+type DdnsService interface {
 	updateIP() error
 	getDomain() string
 }

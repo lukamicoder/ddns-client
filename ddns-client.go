@@ -4,10 +4,8 @@ import (
 	"github.com/kardianos/service"
 	"errors"
 	"github.com/lukamicoder/ini-parser"
-	"io/ioutil"
 	"math/rand"
 	"net"
-	"net/http"
 	"regexp"
 	"strings"
 	"time"
@@ -40,27 +38,12 @@ var urls = []string{
 	"www.checkip.org",
 }
 
-//Ddns represents a dynamic DNS service
-type Ddns struct {
-	Name     string
-	Domain   string
-	Account  string
-	Password string
-	Token    string
-}
-
-//DdnsService represents an interface for a dynamic DNS service
-type DdnsService interface {
-	updateIP() error
-	getDomain() string
-}
-
 type program struct {
-	exit chan struct{}
+	exit chan struct {}
 }
 
 func (p *program) Start(s service.Service) error {
-	p.exit = make(chan struct{})
+	p.exit = make(chan struct {})
 	go p.run()
 	return nil
 }
@@ -88,7 +71,7 @@ func (p *program) Stop(s service.Service) error {
 
 func main() {
 	rand.Seed(time.Now().UTC().UnixNano())
-	
+
 	svcConfig := &service.Config{
 		Name:       "ddns-client",
 		DisplayName: "DDNS Client",
@@ -100,12 +83,12 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	
+
 	logger, err = s.Logger(nil)
 	if err != nil {
 		log.Fatal(err)
 	}
-	
+
 	err = loadConfig()
 	if err != nil {
 		log.Fatal(err)
@@ -117,10 +100,10 @@ func main() {
 			log.Printf("Valid actions: %q\n", service.ControlAction)
 			log.Fatal(err)
 		}
-		
+
 		return
 	}
-	
+
 	err = s.Run()
 	if err != nil {
 		logger.Error(err)
@@ -163,7 +146,7 @@ func loadConfig() error {
 			service.Name = name
 			service.Domain, err = config.GetString(name, "domain")
 			if err != nil {
-				
+
 				logger.Errorf("%s - %s", name, err)
 				continue
 			}
@@ -328,7 +311,7 @@ func update() {
 	for _, service := range services {
 		addr, err := net.LookupHost(service.getDomain())
 		if err != nil {
-				logger.Errorf("%s - %s", service.getDomain(), err)
+			logger.Errorf("%s - %s", service.getDomain(), err)
 			continue
 		}
 		if len(addr) == 0 || addr[0] == "" {
@@ -372,30 +355,4 @@ func getExternalIP() net.IP {
 	}
 
 	return currentIP
-}
-
-//GetResponse returns the content at the url address
-func GetResponse(url string, login string, password string) (string, error) {
-	request, err := http.NewRequest("GET", url, nil)
-	if err != nil {
-		return "", err
-	}
-
-	if login != "" && password != "" {
-		request.SetBasicAuth(login, password)
-	}
-
-	client := &http.Client{}
-	response, err := client.Do(request)
-	if err != nil {
-		return "", err
-	}
-
-	defer response.Body.Close()
-	content, err := ioutil.ReadAll(response.Body)
-	if err != nil {
-		return "", err
-	}
-
-	return string(content), nil
 }

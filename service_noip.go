@@ -12,7 +12,7 @@ func (s *noIPService) getDomain() string {
 }
 
 func (s *noIPService) updateIP() error {
-	content, err := GetResponse("https://dynupdate.no-ip.com/nic/update?hostname="+s.Domain, s.Account, s.Password)
+	content, err := GetResponse("https://dynupdate.no-ip.com/nic/update?hostname=" + s.Domain, s.Account, s.Password)
 	if err != nil {
 		return err
 	}

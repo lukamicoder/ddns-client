@@ -23,7 +23,7 @@ func (s *nameCheapService) updateIP() error {
 	}
 
 	host := s.Domain[0:pos]
-	domain := s.Domain[pos+1 : len(s.Domain)]
+	domain := s.Domain[pos + 1 : len(s.Domain)]
 
 	url := "https://dynamicdns.park-your-domain.com/update?domain=" + domain + "&host=" + host + "&password=" + s.Password
 

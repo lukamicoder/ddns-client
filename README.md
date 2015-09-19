@@ -9,6 +9,7 @@ A simple dynamic dns client in Go. The following services are supported:
  - FreeDNS:		http://freedns.afraid.org/
  - System-NS:	http://system-ns.com/
  - IpDns:	http://www.ipdns.hu/
+ - Dynu: https://www.dynu.com/
 
 Usage
 

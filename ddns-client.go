@@ -292,6 +292,31 @@ func loadConfig() error {
 				continue
 			}
 			services = append(services, service)
+		case "dynu":
+			service := new(dynuService)
+			service.Name = name
+			if service.Domain, err = config.GetString(name, "domain");
+			if err != nil {
+				logger.Errorf("%s - %s", name, err)
+				continue
+			}
+			_, err := net.LookupHost(service.getDomain())
+			if err != nil {
+				logger.Errorf("%s - %s", name, err)
+				continue
+			}
+
+			service.Account, err = config.GetString(name, "account")
+			if err != nil {
+				logger.Errorf("%s - %s", name, err)
+				continue
+			}
+			service.Password, err = config.GetString(name, "password")
+			if err != nil {
+				logger.Errorf("%s - %s", name, err)
+				continue
+			}
+			services = append(services, service)
 		}
 	}
 

@@ -1,16 +1,16 @@
 package main
 
 import (
-	"github.com/kardianos/service"
 	"errors"
+	"github.com/kardianos/service"
 	"github.com/lukamicoder/ini-parser"
+	"log"
 	"math/rand"
 	"net"
+	"os"
 	"regexp"
 	"strings"
 	"time"
-	"log"
-	"os"
 )
 
 var (
@@ -73,7 +73,7 @@ func main() {
 	rand.Seed(time.Now().UTC().UnixNano())
 
 	svcConfig := &service.Config{
-		Name:       "ddns-client",
+		Name:        "ddns-client",
 		DisplayName: "DDNS Client",
 		Description: "Dynamic DNS Client.",
 	}
@@ -113,8 +113,7 @@ func main() {
 func loadConfig() error {
 	var config iniparser.Config
 
-	err := config.LoadFile("./config.ini")
-	if err != nil {
+	if err := config.LoadFile("./config.ini"); err != nil {
 		return err
 	}
 
@@ -128,8 +127,7 @@ func loadConfig() error {
 		var name = section.Name
 
 		if name == "settings" {
-			interval, err = config.GetInt(name, "interval")
-			if err != nil {
+			if interval, err = config.GetInt(name, "interval"); err != nil {
 				logger.Errorf("%s - %s", name, err)
 			}
 			continue
@@ -144,20 +142,16 @@ func loadConfig() error {
 		case "namecheap":
 			service := new(nameCheapService)
 			service.Name = name
-			service.Domain, err = config.GetString(name, "domain")
-			if err != nil {
-
+			if service.Domain, err = config.GetString(name, "domain"); err != nil {
 				logger.Errorf("%s - %s", name, err)
 				continue
 			}
-			_, err := net.LookupHost(service.getDomain())
-			if err != nil {
+			if _, err := net.LookupHost(service.getDomain()); err != nil {
 				logger.Errorf("%s - %s", name, err)
 				continue
 			}
 
-			service.Password, err = config.GetString(name, "password")
-			if err != nil {
+			if service.Password, err = config.GetString(name, "password"); err != nil {
 				logger.Errorf("%s - %s", name, err)
 				continue
 			}
@@ -191,24 +185,20 @@ func loadConfig() error {
 		case "changeip":
 			service := new(changeIPService)
 			service.Name = name
-			service.Domain, err = config.GetString(name, "domain")
-			if err != nil {
+			if service.Domain, err = config.GetString(name, "domain"); err != nil {
 				logger.Errorf("%s - %s", name, err)
 				continue
 			}
-			_, err := net.LookupHost(service.getDomain())
-			if err != nil {
+			if _, err := net.LookupHost(service.getDomain()); err != nil {
 				logger.Errorf("%s - %s", name, err)
 				continue
 			}
 
-			service.Account, err = config.GetString(name, "account")
-			if err != nil {
+			if service.Account, err = config.GetString(name, "account"); err != nil {
 				logger.Errorf("%s - %s", name, err)
 				continue
 			}
-			service.Password, err = config.GetString(name, "password")
-			if err != nil {
+			if service.Password, err = config.GetString(name, "password"); err != nil {
 				logger.Errorf("%s - %s", name, err)
 				continue
 			}
@@ -216,19 +206,16 @@ func loadConfig() error {
 		case "duckdns":
 			service := new(duckDNSService)
 			service.Name = name
-			service.Domain, err = config.GetString(name, "domain")
-			if err != nil {
+			if service.Domain, err = config.GetString(name, "domain"); err != nil {
 				logger.Errorf("%s - %s", name, err)
 				continue
 			}
-			_, err := net.LookupHost(service.getDomain())
-			if err != nil {
+			if _, err := net.LookupHost(service.getDomain()); err != nil {
 				logger.Errorf("%s - %s", name, err)
 				continue
 			}
 
-			service.Token, err = config.GetString(name, "token")
-			if err != nil {
+			if service.Token, err = config.GetString(name, "token"); err != nil {
 				logger.Errorf("%s - %s", name, err)
 				continue
 			}
@@ -236,19 +223,16 @@ func loadConfig() error {
 		case "freedns":
 			service := new(freeDNSService)
 			service.Name = name
-			service.Domain, err = config.GetString(name, "domain")
-			if err != nil {
+			if service.Domain, err = config.GetString(name, "domain"); err != nil {
 				logger.Errorf("%s - %s", name, err)
 				continue
 			}
-			_, err := net.LookupHost(service.getDomain())
-			if err != nil {
+			if _, err := net.LookupHost(service.getDomain()); err != nil {
 				logger.Errorf("%s - %s", name, err)
 				continue
 			}
 
-			service.Token, err = config.GetString(name, "token")
-			if err != nil {
+			if service.Token, err = config.GetString(name, "token"); err != nil {
 				logger.Errorf("%s - %s", name, err)
 				continue
 			}
@@ -257,18 +241,15 @@ func loadConfig() error {
 		case "systemns":
 			service := new(systemNSService)
 			service.Name = name
-			service.Domain, err = config.GetString(name, "domain")
-			if err != nil {
+			if service.Domain, err = config.GetString(name, "domain"); err != nil {
 				logger.Errorf("%s - %s", name, err)
 				continue
 			}
-			_, err := net.LookupHost(service.getDomain())
-			if err != nil {
+			if _, err := net.LookupHost(service.getDomain()); err != nil {
 				logger.Errorf("%s - %s", name, err)
 				continue
 			}
-			service.Token, err = config.GetString(name, "token")
-			if err != nil {
+			if service.Token, err = config.GetString(name, "token"); err != nil {
 				logger.Errorf("%s - %s", name, err)
 				continue
 			}
@@ -276,18 +257,15 @@ func loadConfig() error {
 		case "ipdns":
 			service := new(ipDNSService)
 			service.Name = name
-			service.Domain, err = config.GetString(name, "domain")
-			if err != nil {
+			if service.Domain, err = config.GetString(name, "domain"); err != nil {
 				logger.Errorf("%s - %s", name, err)
 				continue
 			}
-			_, err := net.LookupHost(service.getDomain())
-			if err != nil {
+			if _, err := net.LookupHost(service.getDomain()); err != nil {
 				logger.Errorf("%s - %s", name, err)
 				continue
 			}
-			service.Password, err = config.GetString(name, "password")
-			if err != nil {
+			if service.Password, err = config.GetString(name, "password"); err != nil {
 				logger.Errorf("%s - %s", name, err)
 				continue
 			}
@@ -295,24 +273,20 @@ func loadConfig() error {
 		case "dynu":
 			service := new(dynuService)
 			service.Name = name
-			if service.Domain, err = config.GetString(name, "domain");
-			if err != nil {
+			if service.Domain, err = config.GetString(name, "domain"); err != nil {
 				logger.Errorf("%s - %s", name, err)
 				continue
 			}
-			_, err := net.LookupHost(service.getDomain())
-			if err != nil {
+			if _, err := net.LookupHost(service.getDomain()); err != nil {
 				logger.Errorf("%s - %s", name, err)
 				continue
 			}
 
-			service.Account, err = config.GetString(name, "account")
-			if err != nil {
+			if service.Account, err = config.GetString(name, "account"); err != nil {
 				logger.Errorf("%s - %s", name, err)
 				continue
 			}
-			service.Password, err = config.GetString(name, "password")
-			if err != nil {
+			if service.Password, err = config.GetString(name, "password"); err != nil {
 				logger.Errorf("%s - %s", name, err)
 				continue
 			}
@@ -328,8 +302,8 @@ func loadConfig() error {
 }
 
 func update() {
-	currentIP := getExternalIP()
-	if currentIP == nil {
+	var currentIP net.IP
+	if currentIP = getExternalIP(); currentIP == nil {
 		return
 	}
 
@@ -372,9 +346,7 @@ func getExternalIP() net.IP {
 
 		ip := regex.FindString(content)
 
-		currentIP = net.ParseIP(ip)
-
-		if currentIP != nil {
+		if currentIP = net.ParseIP(ip); currentIP != nil {
 			return currentIP
 		}
 	}

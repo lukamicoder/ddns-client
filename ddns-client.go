@@ -265,6 +265,10 @@ func loadConfig() error {
 				logger.Errorf("%s - %s", name, err)
 				continue
 			}
+			if service.Account, err = config.GetString(name, "account"); err != nil {
+				logger.Errorf("%s - %s", name, err)
+				continue
+			}
 			if service.Password, err = config.GetString(name, "password"); err != nil {
 				logger.Errorf("%s - %s", name, err)
 				continue
@@ -281,7 +285,6 @@ func loadConfig() error {
 				logger.Errorf("%s - %s", name, err)
 				continue
 			}
-
 			if service.Account, err = config.GetString(name, "account"); err != nil {
 				logger.Errorf("%s - %s", name, err)
 				continue

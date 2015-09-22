@@ -11,7 +11,7 @@ func (s *changeIPService) getDomain() string {
 }
 
 func (s *changeIPService) updateIP() error {
-	url := "https://nic.changeip.com/nic/update?u=" + s.Account + "&p=" + s.Password + "&cmd=update&hostname=" + s.Domain
+	url := "https://nic.changeip.com/nic/update?u=" + s.UserName + "&p=" + s.Password + "&cmd=update&hostname=" + s.Domain
 
 	content, err := GetResponse(url, "", "")
 	if err != nil {

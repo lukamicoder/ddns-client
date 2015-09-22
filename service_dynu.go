@@ -12,7 +12,7 @@ func (s *dynuService) getDomain() string {
 }
 
 func (s *dynuService) updateIP() error {
-	content, err := GetResponse("https://api.dynu.com/nic/update?hostname=" + s.Domain, s.Account, s.Password)
+	content, err := GetResponse("https://api.dynu.com/nic/update?hostname=" + s.Domain, s.UserName, s.Password)
 	if err != nil {
 		return err
 	}

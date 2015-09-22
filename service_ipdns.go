@@ -12,7 +12,7 @@ func (s *ipDNSService) getDomain() string {
 }
 
 func (s *ipDNSService) updateIP() error {
-	content, err := GetResponse("http://update.ipdns.hu/update?hostname=" + s.Domain, s.Account, s.Password)
+	content, err := GetResponse("http://update.ipdns.hu/update?hostname=" + s.Domain, s.UserName, s.Password)
 	if err != nil {
 		return err
 	}

@@ -10,6 +10,7 @@ type Ddns struct {
 	Name     string
 	Domain   string
 	Account  string
+	UserName  string
 	Password string
 	Token    string
 }

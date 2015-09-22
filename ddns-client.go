@@ -150,7 +150,6 @@ func loadConfig() error {
 				logger.Errorf("%s - %s", name, err)
 				continue
 			}
-
 			if service.Password, err = config.GetString(name, "password"); err != nil {
 				logger.Errorf("%s - %s", name, err)
 				continue
@@ -170,7 +169,6 @@ func loadConfig() error {
 				logger.Errorf("%s - %s", name, err)
 				continue
 			}
-
 			service.Account, err = config.GetString(name, "account")
 			if err != nil {
 				logger.Errorf("%s - %s", name, err)
@@ -193,8 +191,7 @@ func loadConfig() error {
 				logger.Errorf("%s - %s", name, err)
 				continue
 			}
-
-			if service.Account, err = config.GetString(name, "account"); err != nil {
+			if service.UserName, err = config.GetString(name, "username"); err != nil {
 				logger.Errorf("%s - %s", name, err)
 				continue
 			}
@@ -214,7 +211,6 @@ func loadConfig() error {
 				logger.Errorf("%s - %s", name, err)
 				continue
 			}
-
 			if service.Token, err = config.GetString(name, "token"); err != nil {
 				logger.Errorf("%s - %s", name, err)
 				continue
@@ -231,7 +227,6 @@ func loadConfig() error {
 				logger.Errorf("%s - %s", name, err)
 				continue
 			}
-
 			if service.Token, err = config.GetString(name, "token"); err != nil {
 				logger.Errorf("%s - %s", name, err)
 				continue
@@ -265,7 +260,7 @@ func loadConfig() error {
 				logger.Errorf("%s - %s", name, err)
 				continue
 			}
-			if service.Account, err = config.GetString(name, "account"); err != nil {
+			if service.UserName, err = config.GetString(name, "username"); err != nil {
 				logger.Errorf("%s - %s", name, err)
 				continue
 			}
@@ -285,7 +280,27 @@ func loadConfig() error {
 				logger.Errorf("%s - %s", name, err)
 				continue
 			}
-			if service.Account, err = config.GetString(name, "account"); err != nil {
+			if service.UserName, err = config.GetString(name, "username"); err != nil {
+				logger.Errorf("%s - %s", name, err)
+				continue
+			}
+			if service.Password, err = config.GetString(name, "password"); err != nil {
+				logger.Errorf("%s - %s", name, err)
+				continue
+			}
+			services = append(services, service)
+		case "ydns":
+			service := new(yDNSService)
+			service.Name = name
+			if service.Domain, err = config.GetString(name, "domain"); err != nil {
+				logger.Errorf("%s - %s", name, err)
+				continue
+			}
+			if _, err := net.LookupHost(service.getDomain()); err != nil {
+				logger.Errorf("%s - %s", name, err)
+				continue
+			}
+			if service.UserName, err = config.GetString(name, "username"); err != nil {
 				logger.Errorf("%s - %s", name, err)
 				continue
 			}

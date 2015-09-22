@@ -13,6 +13,9 @@ A simple dynamic dns client in Go. The following services are supported:
  - yDNS:		https://ydns.eu/
 
 Usage
+
 Edit the config.ini file.
-To install it as a Windows service in a Windows environment or a daemon in a Linux environment run 'ddns-client install'. 
+
+To install it as a Windows service in a Windows environment or a daemon in a Linux environment run 'ddns-client install'.
+
 To remove it the service run 'ddns-client uninstall'.

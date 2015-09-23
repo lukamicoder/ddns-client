@@ -11,6 +11,7 @@ A simple dynamic dns client in Go. The following services are supported:
  - IpDns:		http://www.ipdns.hu/
  - Dynu:		https://www.dynu.com/
  - yDNS:		https://ydns.eu/
+ - DDNSS.de:	https://ddnss.de/
 
 Usage
 

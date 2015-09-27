@@ -155,8 +155,7 @@ func loadConfig() error {
 				continue
 			}
 			services = append(services, service)
-		case "noip":
-		case "no-ip":
+		case "noip", "no-ip":
 			service := new(noIPService)
 			service.Name = name
 			service.Domain, err = config.GetString(name, "domain")
@@ -232,8 +231,7 @@ func loadConfig() error {
 				continue
 			}
 			services = append(services, service)
-		case "system-ns":
-		case "systemns":
+		case "system-ns", "systemns":
 			service := new(systemNSService)
 			service.Name = name
 			if service.Domain, err = config.GetString(name, "domain"); err != nil {
@@ -309,8 +307,7 @@ func loadConfig() error {
 				continue
 			}
 			services = append(services, service)
-		case "ddnss.de":
-		case "ddnssde":
+		case "ddnss.de", "ddnssde":
 			service := new(ddnssdeService)
 			service.Name = name
 			if service.Domain, err = config.GetString(name, "domain"); err != nil {

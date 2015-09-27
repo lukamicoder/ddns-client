@@ -327,6 +327,22 @@ func loadConfig() error {
 				continue
 			}
 			services = append(services, service)
+		case "nsupdate":
+			service := new(nsupdateService)
+			service.Name = name
+			if service.Domain, err = config.GetString(name, "domain"); err != nil {
+				logger.Errorf("%s - %s", name, err)
+				continue
+			}
+			if _, err := net.LookupHost(service.getDomain()); err != nil {
+				logger.Errorf("%s - %s", name, err)
+				continue
+			}
+			if service.Password, err = config.GetString(name, "password"); err != nil {
+				logger.Errorf("%s - %s", name, err)
+				continue
+			}
+			services = append(services, service)
 		}
 	}
 

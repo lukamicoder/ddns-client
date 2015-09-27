@@ -12,6 +12,7 @@ A simple dynamic dns client in Go. The following services are supported:
  - Dynu:		https://www.dynu.com/
  - yDNS:		https://ydns.eu/
  - DDNSS.de:	https://ddnss.de/
+ - nsupdate:	https://nsupdate.info/
 
 Usage
 

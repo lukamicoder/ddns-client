@@ -32,7 +32,6 @@ var urls = []string{
 	"www.ipchicken.com",
 	"ipecho.net/plain",
 	"bot.whatismyipaddress.com",
-	"ipv4.ipogre.com",
 	"smart-ip.net/myip",
 	"checkip.amazonaws.com",
 	"www.checkip.org",
